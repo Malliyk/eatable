@@ -1,36 +1,37 @@
 import { settings } from "../config/settings";
 
-const KEY = "eatable_last_attempt";
+function getKey(mobile: string) {
+  return `eatable_cooldown_${mobile}`;
+  }
 
-export function startCooldown() {
-  localStorage.setItem(
-      KEY,
-          Date.now().toString()
-            );
-            }
+  export function startCooldown(mobile: string) {
+    localStorage.setItem(
+        getKey(mobile),
+            Date.now().toString()
+              );
+              }
 
-            export function getRemainingSeconds() {
-              const lastAttempt = localStorage.getItem(KEY);
+              export function getRemainingSeconds(mobile: string) {
+                const lastAttempt = localStorage.getItem(getKey(mobile));
 
-                if (!lastAttempt) {
-                    return 0;
-                      }
+                  if (!lastAttempt) {
+                      return 0;
+                        }
 
-                        const elapsed =
-                            Math.floor(
-                                  (Date.now() - Number(lastAttempt)) / 1000
-                                      );
+                          const elapsed = Math.floor(
+                              (Date.now() - Number(lastAttempt)) / 1000
+                                );
 
-                                        const remaining =
-                                            settings.cooldownMinutes * 60 - elapsed;
+                                  const remaining =
+                                      settings.cooldownMinutes * 60 - elapsed;
 
-                                              return remaining > 0 ? remaining : 0;
-                                              }
+                                        return remaining > 0 ? remaining : 0;
+                                        }
 
-                                              export function isCooldownActive() {
-                                                return getRemainingSeconds() > 0;
-                                                }
+                                        export function isCooldownActive(mobile: string) {
+                                          return getRemainingSeconds(mobile) > 0;
+                                          }
 
-                                                export function clearCooldown() {
-                                                  localStorage.removeItem(KEY);
-                                                  }
+                                          export function clearCooldown(mobile: string) {
+                                            localStorage.removeItem(getKey(mobile));
+                                            }
